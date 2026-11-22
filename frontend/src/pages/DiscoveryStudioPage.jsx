@@ -172,174 +172,6 @@ export default function DiscoveryStudioPage({
     return pt.cluster === Number(clusterFilter);
   });
 
-  const renderAlgorithmSetup = (isCentered = false) => (
-    <div className={`nexora-card ${isCentered ? 'p-6 sm:p-8 space-y-6 shadow-xl max-w-2xl mx-auto border-2 border-[#285A48]' : 'p-5 space-y-5 shadow-sm'}`}>
-      <div className="flex items-center justify-between border-b border-[#285A48]/50 pb-3">
-        <h3 className={`${isCentered ? 'text-base sm:text-lg' : 'text-sm'} font-black text-white uppercase tracking-wider flex items-center gap-2`}>
-          <Sliders className={`${isCentered ? 'w-5 h-5' : 'w-4 h-4'} text-[#B0E4CC]`} />
-          <span>Algorithm Setup</span>
-        </h3>
-        {isCentered && (
-          <span className="text-xs text-[#82B3A1] font-semibold">
-            Configure parameters & run
-          </span>
-        )}
-      </div>
-
-      {/* Mode & Scaling */}
-      <div className={isCentered ? "grid grid-cols-1 sm:grid-cols-2 gap-4" : "space-y-4"}>
-        {/* Algorithm Choice */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-[#E0F4EC]">Mode</label>
-          <select
-            value={algorithmType}
-            onChange={(e) => setAlgorithmType(e.target.value)}
-            className="w-full bg-[#0B1916] border-2 border-[#285A48] text-white text-xs rounded-xl p-2.5 focus:outline-none focus:border-[#B0E4CC] font-semibold cursor-pointer"
-          >
-            <option value="full_discovery">Full Pattern Discovery (All Engines)</option>
-            <option value="kmeans">K-Means Clustering</option>
-            <option value="dbscan">DBSCAN Density Clustering</option>
-            <option value="isolation_forest">Isolation Forest Anomalies</option>
-          </select>
-        </div>
-
-        {/* Scaling Method */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-[#E0F4EC]">Scaling Technique</label>
-          <select
-            value={scalingMethod}
-            onChange={(e) => setScalingMethod(e.target.value)}
-            className="w-full bg-[#0B1916] border-2 border-[#285A48] text-white text-xs rounded-xl p-2.5 focus:outline-none focus:border-[#B0E4CC] font-semibold cursor-pointer"
-          >
-            <option value="standard">StandardScaler (Zero Mean, Unit Variance)</option>
-            <option value="robust">RobustScaler (Median / IQR Outlier-Resistant)</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Sliders Area */}
-      <div className="space-y-3 pt-2 border-t border-[#1D3B32]">
-        {/* K-Means Clusters Slider */}
-        {(algorithmType === 'full_discovery' || algorithmType === 'kmeans') && (
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-xs">
-              <span className="text-[#E0F4EC] font-bold">Clusters (k):</span>
-              <span className="text-[#B0E4CC] font-black">{kClusters}</span>
-            </div>
-            <input
-              type="range"
-              min="2"
-              max="8"
-              value={kClusters}
-              onChange={(e) => setKClusters(Number(e.target.value))}
-              className="w-full accent-[#B0E4CC] bg-[#142D26]"
-            />
-          </div>
-        )}
-
-        {/* DBSCAN Parameters */}
-        {(algorithmType === 'full_discovery' || algorithmType === 'dbscan') && (
-          <div className={isCentered ? "grid grid-cols-1 sm:grid-cols-2 gap-4" : "space-y-3"}>
-            <div className="space-y-1">
-              <div className="flex justify-between text-xs">
-                <span className="text-[#E0F4EC] font-semibold">DBSCAN Epsilon (ε):</span>
-                <span className="text-[#B0E4CC] font-mono font-bold">{dbscanEps}</span>
-              </div>
-              <input
-                type="range"
-                min="0.2"
-                max="1.8"
-                step="0.1"
-                value={dbscanEps}
-                onChange={(e) => setDbscanEps(Number(e.target.value))}
-                className="w-full accent-[#B0E4CC] bg-[#142D26]"
-              />
-            </div>
-            <div className="space-y-1">
-              <div className="flex justify-between text-xs">
-                <span className="text-[#E0F4EC] font-semibold">Min Samples:</span>
-                <span className="text-[#B0E4CC] font-mono font-bold">{dbscanMinSamples}</span>
-              </div>
-              <input
-                type="range"
-                min="3"
-                max="15"
-                value={dbscanMinSamples}
-                onChange={(e) => setDbscanMinSamples(Number(e.target.value))}
-                className="w-full accent-[#B0E4CC] bg-[#142D26]"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Isolation Forest Contamination */}
-        {(algorithmType === 'full_discovery' || algorithmType === 'isolation_forest') && (
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-xs">
-              <span className="text-[#E0F4EC] font-bold">Anomaly Contamination:</span>
-              <span className="text-[#FF859F] font-black">{(contamination * 100).toFixed(0)}%</span>
-            </div>
-            <input
-              type="range"
-              min="0.01"
-              max="0.15"
-              step="0.01"
-              value={contamination}
-              onChange={(e) => setContamination(Number(e.target.value))}
-              className="w-full accent-[#FF859F] bg-[#2E161E]"
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Feature Selection Checklist */}
-      <div className="space-y-2 pt-2 border-t border-[#1D3B32]">
-        <div className="flex justify-between items-center">
-          <label className="text-xs font-bold text-[#E0F4EC]">Active Numerical Features</label>
-          {isCentered && (
-            <span className="text-[11px] text-[#82B3A1] font-mono">
-              {activeFeatures.length} selected
-            </span>
-          )}
-        </div>
-        <div className={`space-y-1.5 overflow-y-auto pr-1 ${isCentered ? 'max-h-56 grid grid-cols-1 sm:grid-cols-2 gap-2 space-y-0' : 'max-h-40'}`}>
-          {datasetDetail?.profile?.column_metadata
-            ?.filter(c => c.is_numeric)
-            .map((c) => (
-              <label key={c.name} className={`flex items-center gap-2 text-xs text-[#9EC4B5] cursor-pointer hover:text-white font-medium ${isCentered ? 'p-2 rounded-lg bg-[#0B1A16] border border-[#1D3B32] hover:border-[#285A48]' : ''}`}>
-                <input
-                  type="checkbox"
-                  checked={activeFeatures.includes(c.name)}
-                  onChange={() => toggleFeature(c.name)}
-                  className="rounded border-[#285A48] text-[#B0E4CC] focus:ring-0"
-                />
-                <span className="truncate">{c.name}</span>
-              </label>
-            ))}
-        </div>
-      </div>
-
-      {/* Execute Button */}
-      <button
-        onClick={handleRunAnalysis}
-        disabled={running || activeFeatures.length === 0}
-        className={`btn-primary w-full shadow-md text-xs sm:text-sm font-bold cursor-pointer select-none ${isCentered ? 'py-3.5 mt-2' : 'py-3'}`}
-      >
-        {running ? (
-          <>
-            <RefreshCw className="w-4 h-4 animate-spin" />
-            <span>Computing Models...</span>
-          </>
-        ) : (
-          <>
-            <Play className="w-4 h-4 fill-current" />
-            <span>Run Pattern Discovery</span>
-          </>
-        )}
-      </button>
-    </div>
-  );
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
@@ -383,34 +215,184 @@ export default function DiscoveryStudioPage({
         </div>
       )}
 
-      {/* If Run has not been clicked yet, display the Algorithm Setup menu in the middle */}
-      {!analysisResult && !running ? (
-        <div className="py-4 max-w-2xl mx-auto">
-          {renderAlgorithmSetup(true)}
-        </div>
-      ) : (
-        /* Main Studio Grid: Configuration Sidebar + Live Discovery Output */
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          
-          {/* Left Column: Algorithm Controls & Parameters (1 Col) */}
-          <div className="space-y-6">
-            {renderAlgorithmSetup(false)}
-          </div>
+      {/* Main Studio Grid: Configuration Sidebar + Live Discovery Output */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        {/* Left Column: Algorithm Controls & Parameters (1 Col) */}
+        <div className="space-y-6">
+          <div className="nexora-card p-5 space-y-5 shadow-sm">
+            <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-[#B0E4CC]" />
+              <span>Algorithm Setup</span>
+            </h3>
 
-          {/* Right 3 Columns: Live Discovery Visuals & Insights */}
-          <div className="lg:col-span-3 space-y-6">
-            
-            {running && (
-              <div className="nexora-card p-20 text-center space-y-4 shadow-sm">
-                <RefreshCw className="w-10 h-10 animate-spin text-[#B0E4CC] mx-auto" />
-                <h3 className="text-base font-black text-white">Uncovering Hidden Patterns...</h3>
-                <p className="text-xs text-[#9EC4B5] max-w-sm mx-auto font-medium">
-                  Scaling features, computing cluster centroids, fitting Isolation Forest trees, and calculating PCA projections.
-                </p>
+            {/* Algorithm Choice */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[#E0F4EC]">Mode</label>
+              <select
+                value={algorithmType}
+                onChange={(e) => setAlgorithmType(e.target.value)}
+                className="w-full bg-[#0B1916] border-2 border-[#285A48] text-white text-xs rounded-xl p-2.5 focus:outline-none focus:border-[#B0E4CC] font-semibold"
+              >
+                <option value="full_discovery">Full Pattern Discovery (All Engines)</option>
+                <option value="kmeans">K-Means Clustering</option>
+                <option value="dbscan">DBSCAN Density Clustering</option>
+                <option value="isolation_forest">Isolation Forest Anomalies</option>
+              </select>
+            </div>
+
+            {/* K-Means Clusters Slider */}
+            {(algorithmType === 'full_discovery' || algorithmType === 'kmeans') && (
+              <div className="space-y-1.5 pt-2 border-t border-[#1D3B32]">
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#E0F4EC] font-bold">Clusters (k):</span>
+                  <span className="text-[#B0E4CC] font-black">{kClusters}</span>
+                </div>
+                <input
+                  type="range"
+                  min="2"
+                  max="8"
+                  value={kClusters}
+                  onChange={(e) => setKClusters(Number(e.target.value))}
+                  className="w-full accent-[#B0E4CC] bg-[#142D26]"
+                />
               </div>
             )}
 
-            {analysisResult && !running && (
+            {/* DBSCAN Parameters */}
+            {(algorithmType === 'full_discovery' || algorithmType === 'dbscan') && (
+              <div className="space-y-3 pt-2 border-t border-[#1D3B32]">
+                <div className="space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-[#E0F4EC] font-semibold">DBSCAN Epsilon (ε):</span>
+                    <span className="text-[#B0E4CC] font-mono font-bold">{dbscanEps}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.2"
+                    max="1.8"
+                    step="0.1"
+                    value={dbscanEps}
+                    onChange={(e) => setDbscanEps(Number(e.target.value))}
+                    className="w-full accent-[#B0E4CC] bg-[#142D26]"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-[#E0F4EC] font-semibold">Min Samples:</span>
+                    <span className="text-[#B0E4CC] font-mono font-bold">{dbscanMinSamples}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="3"
+                    max="15"
+                    value={dbscanMinSamples}
+                    onChange={(e) => setDbscanMinSamples(Number(e.target.value))}
+                    className="w-full accent-[#B0E4CC] bg-[#142D26]"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Isolation Forest Contamination */}
+            {(algorithmType === 'full_discovery' || algorithmType === 'isolation_forest') && (
+              <div className="space-y-1.5 pt-2 border-t border-[#1D3B32]">
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#E0F4EC] font-bold">Anomaly Contamination:</span>
+                  <span className="text-[#FF859F] font-black">{(contamination * 100).toFixed(0)}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.01"
+                  max="0.15"
+                  step="0.01"
+                  value={contamination}
+                  onChange={(e) => setContamination(Number(e.target.value))}
+                  className="w-full accent-[#FF859F] bg-[#2E161E]"
+                />
+              </div>
+            )}
+
+            {/* Scaling Method */}
+            <div className="space-y-1.5 pt-2 border-t border-[#1D3B32]">
+              <label className="text-xs font-bold text-[#E0F4EC]">Scaling Technique</label>
+              <select
+                value={scalingMethod}
+                onChange={(e) => setScalingMethod(e.target.value)}
+                className="w-full bg-[#0B1916] border-2 border-[#285A48] text-white text-xs rounded-xl p-2.5 focus:outline-none focus:border-[#B0E4CC] font-semibold"
+              >
+                <option value="standard">StandardScaler (Zero Mean, Unit Variance)</option>
+                <option value="robust">RobustScaler (Median / IQR Outlier-Resistant)</option>
+              </select>
+            </div>
+
+            {/* Feature Selection Checklist */}
+            <div className="space-y-2 pt-2 border-t border-[#1D3B32]">
+              <label className="text-xs font-bold text-[#E0F4EC]">Active Numerical Features</label>
+              <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                {datasetDetail?.profile?.column_metadata
+                  ?.filter(c => c.is_numeric)
+                  .map((c) => (
+                    <label key={c.name} className="flex items-center gap-2 text-xs text-[#9EC4B5] cursor-pointer hover:text-white font-medium">
+                      <input
+                        type="checkbox"
+                        checked={activeFeatures.includes(c.name)}
+                        onChange={() => toggleFeature(c.name)}
+                        className="rounded border-[#285A48] text-[#B0E4CC] focus:ring-0"
+                      />
+                      <span className="truncate">{c.name}</span>
+                    </label>
+                  ))}
+              </div>
+            </div>
+
+            {/* Execute Button */}
+            <button
+              onClick={handleRunAnalysis}
+              disabled={running || activeFeatures.length === 0}
+              className="btn-primary w-full py-3 shadow-md text-xs cursor-pointer"
+            >
+              {running ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Computing Models...</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 fill-current" />
+                  <span>Run Pattern Discovery</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Right 3 Columns: Live Discovery Visuals & Insights */}
+        <div className="lg:col-span-3 space-y-6">
+          
+          {!analysisResult && !running && (
+            <div className="nexora-card p-16 text-center space-y-4">
+              <div className="w-16 h-16 rounded-2xl bg-[#16362D] border-2 border-[#408A71] flex items-center justify-center mx-auto text-[#B0E4CC]">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-black text-white">Discovery Studio Ready</h3>
+              <p className="text-xs text-[#9EC4B5] max-w-md mx-auto leading-relaxed font-medium">
+                Click <strong>"Run Pattern Discovery"</strong> on the left to execute Scikit-learn clustering, multivariate anomaly scoring, and PCA dimensionality reduction.
+              </p>
+            </div>
+          )}
+
+          {running && (
+            <div className="nexora-card p-20 text-center space-y-4 shadow-sm">
+              <RefreshCw className="w-10 h-10 animate-spin text-[#B0E4CC] mx-auto" />
+              <h3 className="text-base font-black text-white">Uncovering Hidden Patterns...</h3>
+              <p className="text-xs text-[#9EC4B5] max-w-sm mx-auto font-medium">
+                Scaling features, computing cluster centroids, fitting Isolation Forest trees, and calculating PCA projections.
+              </p>
+            </div>
+          )}
+
+          {analysisResult && !running && (
             <div className="space-y-6 animate-fade-in">
               
               {/* Top Analytical Metrics Bar */}
@@ -766,19 +748,10 @@ export default function DiscoveryStudioPage({
                 </div>
               )}
 
-              {/* Action bar for Reports & Reconfigure */}
+              {/* Action bar for Reports */}
               <div className="p-4 rounded-xl bg-[#112621] border-2 border-[#285A48] flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setAnalysisResult(null)}
-                    className="btn-secondary text-xs shadow-sm cursor-pointer"
-                  >
-                    <Sliders className="w-3.5 h-3.5" />
-                    <span>Back to Centered Setup</span>
-                  </button>
-                  <span className="text-xs text-[#9EC4B5] font-semibold hidden sm:inline">
-                    or export findings to PDF
-                  </span>
+                <div className="text-xs text-[#9EC4B5] font-bold">
+                  Ready to export or compare findings with other algorithms?
                 </div>
                 <button
                   onClick={() => setActiveTab('reports')}
@@ -795,7 +768,6 @@ export default function DiscoveryStudioPage({
         </div>
 
       </div>
-    )}
 
     </div>
   );
