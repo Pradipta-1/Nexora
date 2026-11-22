@@ -70,23 +70,18 @@ body {
   border: 1.5px solid #B0E4CC;
   border-radius: 0.75rem;
   padding: 0.625rem 1.25rem;
-  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+  transition: all 0.15s ease-in-out;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  user-select: none;
 }
 .btn-primary:hover {
   background-color: #C9EFE0;
   border-color: #C9EFE0;
   box-shadow: 0 4px 18px rgba(176, 228, 204, 0.35);
   transform: translateY(-1px);
-}
-.btn-primary:active {
-  transform: scale(0.97) translateY(0);
-  box-shadow: 0 2px 8px rgba(176, 228, 204, 0.2);
 }
 
 .btn-secondary {
@@ -96,13 +91,12 @@ body {
   border: 1.5px solid #408A71;
   border-radius: 0.75rem;
   padding: 0.625rem 1.25rem;
-  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+  transition: all 0.15s ease-in-out;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  user-select: none;
 }
 .btn-secondary:hover {
   background-color: #285A48;
@@ -110,10 +104,6 @@ body {
   color: #FFFFFF;
   box-shadow: 0 4px 16px rgba(64, 138, 113, 0.3);
   transform: translateY(-1px);
-}
-.btn-secondary:active {
-  transform: scale(0.97) translateY(0);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .btn-jade {
@@ -123,22 +113,17 @@ body {
   border: 1.5px solid #55A388;
   border-radius: 0.75rem;
   padding: 0.625rem 1.25rem;
-  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+  transition: all 0.15s ease-in-out;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  user-select: none;
 }
 .btn-jade:hover {
   background-color: #4C9B80;
   box-shadow: 0 4px 16px rgba(64, 138, 113, 0.4);
   transform: translateY(-1px);
-}
-.btn-jade:active {
-  transform: scale(0.97) translateY(0);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* Global Form Elements */

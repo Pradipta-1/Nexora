@@ -38,7 +38,7 @@ export default function LandingPage({ setActiveTab, setSelectedDatasetId }) {
     <div className="space-y-20 py-8">
       
       {/* Hero Section */}
-      <section className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-10 pb-6 overflow-hidden">
+      <section className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-8">
         
         {/* Ambient Dark Forest & Mint Glows */}
         <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[320px] bg-[#285A48]/35 rounded-full blur-[110px] pointer-events-none -z-10"></div>
@@ -54,7 +54,7 @@ export default function LandingPage({ setActiveTab, setSelectedDatasetId }) {
           Discover <span className="bg-gradient-to-r from-[#B0E4CC] via-[#6CB299] to-[#FFFFFF] bg-clip-text text-transparent">Beyond the Obvious.</span>
         </h1>
 
-        <p className="mt-6 text-base sm:text-xl text-[#9EC4B5] max-w-2xl mx-auto leading-relaxed font-medium">
+        <p className="mt-6 text-lg sm:text-xl text-[#9EC4B5] max-w-2xl mx-auto leading-relaxed font-medium">
           Uncover the hidden patterns, clustered cohorts, multivariate anomalies, and subtle statistical relationships in your datasets that traditional dashboards overlook.
         </p>
 
@@ -62,7 +62,7 @@ export default function LandingPage({ setActiveTab, setSelectedDatasetId }) {
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             onClick={() => setActiveTab('upload')}
-            className="btn-primary text-base px-8 py-3.5 shadow-lg font-bold"
+            className="btn-primary text-base px-8 py-3.5 shadow-lg"
           >
             <span>Start Discovering</span>
             <ArrowRight className="w-4 h-4" />
@@ -71,7 +71,7 @@ export default function LandingPage({ setActiveTab, setSelectedDatasetId }) {
           <button
             onClick={() => handleQuickStart('customer_segments')}
             disabled={loadingSample}
-            className="btn-secondary text-sm px-6 py-3.5 shadow-sm font-semibold"
+            className="btn-secondary text-sm px-6 py-3.5 shadow-sm"
           >
             <Database className="w-4 h-4 text-[#B0E4CC]" />
             <span>{loadingSample ? 'Loading Curated Data...' : 'Explore Customer Segments Demo'}</span>
