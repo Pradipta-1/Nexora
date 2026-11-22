@@ -20,17 +20,17 @@ export default function Navbar({ activeTab, setActiveTab }) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#091413]/95 backdrop-blur-md border-b-2 border-[#285A48] shadow-lg">
+    <header className="sticky top-0 z-50 bg-[#091413]/95 backdrop-blur-md border-b border-[#285A48]/80 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-2">
+        <div className="flex items-center justify-between h-16 gap-3">
           
           {/* Logo & Brand Identity */}
           <div 
             onClick={() => setActiveTab('landing')}
-            className="flex items-center gap-3 cursor-pointer group select-none flex-shrink-0"
+            className="flex items-center gap-2.5 cursor-pointer group select-none flex-shrink-0"
           >
             {/* Custom Connected Nodes Discovery Logo */}
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#16382F] via-[#285A48] to-[#408A71] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200 border border-[#B0E4CC]/40 p-2">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#16382F] via-[#285A48] to-[#408A71] flex items-center justify-center shadow-md group-hover:scale-105 group-active:scale-95 transition-transform duration-150 border border-[#B0E4CC]/40 p-1.5">
               <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
                 <circle cx="6" cy="7" r="2.5" fill="#B0E4CC" />
                 <circle cx="18" cy="6" r="2.5" fill="#B0E4CC" />
@@ -40,23 +40,18 @@ export default function Navbar({ activeTab, setActiveTab }) {
               </svg>
             </div>
 
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-black tracking-tight text-white group-hover:text-[#B0E4CC] transition-colors">
-                  Nexora
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#16382F] text-[#B0E4CC] border border-[#408A71]">
-                  ML Core v1.0
-                </span>
-              </div>
-              <p className="text-[11px] text-[#82AFA0] font-semibold hidden sm:block leading-none mt-0.5">
-                Discover Beyond the Obvious.
-              </p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg lg:text-xl font-black tracking-tight text-white group-hover:text-[#B0E4CC] transition-colors">
+                Nexora
+              </span>
+              <span className="hidden 2xl:inline-flex text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[#16382F] text-[#B0E4CC] border border-[#408A71]">
+                v1.0
+              </span>
             </div>
           </div>
 
-          {/* Desktop Navigation Tabs */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 flex-1 justify-center max-w-2xl">
+          {/* Desktop Navigation Segmented Bar - Never Overlaps */}
+          <nav className="hidden md:flex items-center bg-[#0D201B]/80 p-1 rounded-xl border border-[#234C40]/80 shadow-inner flex-shrink-0">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -64,13 +59,14 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-1.5 lg:gap-2 px-3 py-1.5 lg:px-3.5 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  type="button"
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 lg:px-3 lg:py-1.5 rounded-lg text-xs lg:text-sm font-semibold whitespace-nowrap cursor-pointer select-none transition-colors duration-150 active:scale-[0.97] border ${
                     isActive
-                      ? 'bg-[#B0E4CC] text-[#091413] border border-[#B0E4CC] shadow-[0_0_15px_rgba(176,228,204,0.35)] font-black'
-                      : 'text-[#9EC4B5] hover:text-white hover:bg-[#16382F]/70'
+                      ? 'bg-[#285A48] text-[#B0E4CC] border-[#408A71] shadow-sm font-bold'
+                      : 'text-[#8FBBA9] hover:text-white hover:bg-[#16382F]/60 border-transparent'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#091413]' : 'text-[#5D9280]'}`} />
+                  <Icon className={`w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0 transition-colors ${isActive ? 'text-[#B0E4CC]' : 'text-[#649986]'}`} />
                   <span>{item.label}</span>
                 </button>
               );
@@ -78,27 +74,28 @@ export default function Navbar({ activeTab, setActiveTab }) {
           </nav>
 
           {/* Right Header Status & Action */}
-          <div className="flex items-center gap-2.5 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {/* Live System Indicator */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#122923] border border-[#285A48] text-xs font-bold text-[#B0E4CC]">
-              <span className="w-2 h-2 rounded-full bg-[#B0E4CC] shadow-[0_0_8px_#B0E4CC] animate-pulse"></span>
-              <span className="hidden xl:inline">FastAPI & ML </span>Ready
+            <div className="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#122923] border border-[#285A48] text-xs font-semibold text-[#B0E4CC] select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B0E4CC] shadow-[0_0_6px_#B0E4CC] animate-pulse"></span>
+              <span>FastAPI Ready</span>
             </div>
 
             {/* Quick Action Button */}
             <button
               onClick={() => setActiveTab('upload')}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#B0E4CC] text-[#091413] text-xs font-black hover:bg-[#C9EFE0] transition-all shadow-md cursor-pointer"
+              type="button"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#B0E4CC] text-[#091413] text-xs font-bold hover:bg-[#C9EFE0] active:scale-[0.96] transition-all duration-100 shadow-sm cursor-pointer select-none"
             >
               <span>Ingest Data</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 flex-shrink-0" />
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile Navigation bar */}
-      <div className="md:hidden flex overflow-x-auto px-4 py-2 border-t border-[#285A48] gap-1.5 scrollbar-none bg-[#0B1815]">
+      <div className="md:hidden flex overflow-x-auto px-3 py-1.5 border-t border-[#285A48]/70 gap-1 scrollbar-none bg-[#0B1815]">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -106,13 +103,14 @@ export default function Navbar({ activeTab, setActiveTab }) {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer transition-all ${
+              type="button"
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer select-none transition-colors duration-150 active:scale-[0.96] border ${
                 isActive
-                  ? 'bg-[#B0E4CC] text-[#091413] font-black'
-                  : 'text-[#9EC4B5] bg-[#0E201B] hover:bg-[#16362D]'
+                  ? 'bg-[#285A48] text-[#B0E4CC] border-[#408A71] shadow-sm font-bold'
+                  : 'text-[#8FBBA9] bg-[#0E201B] hover:bg-[#16362D] border-transparent'
               }`}
             >
-              <Icon className="w-3.5 h-3.5" />
+              <Icon className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{item.label}</span>
             </button>
           );
