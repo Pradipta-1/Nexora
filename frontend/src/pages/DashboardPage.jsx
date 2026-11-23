@@ -116,70 +116,62 @@ export default function DashboardPage({ setActiveTab, setSelectedDatasetId, setS
         </div>
       )}
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {/* Telemetry Command Bar */}
+      <div className="nexora-panel p-0 overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-[#1E4438] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         
         {/* Total Datasets */}
-        <div className="nexora-card p-6 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#82AFA0]">Total Datasets</span>
-            <div className="p-2.5 rounded-xl bg-[#16362D] text-[#B0E4CC] border border-[#408A71]">
-              <Database className="w-5 h-5" />
-            </div>
+        <div className="p-5 space-y-1">
+          <div className="flex items-center justify-between text-xs font-mono text-[#82AFA0]">
+            <span>DATASETS REGISTERED</span>
+            <Database className="w-3.5 h-3.5 text-[#B0E4CC]" />
           </div>
-          <div className="mt-4 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-white">
+          <div className="flex items-baseline gap-2 pt-1">
+            <span className="text-2xl sm:text-3xl font-black text-white font-mono">
               {loading ? '...' : formatNumber(stats?.total_datasets ?? 0)}
             </span>
-            <span className="text-xs text-[#82AFA0] font-medium">stored in registry</span>
+            <span className="text-[10px] text-[#558776] font-mono">tables</span>
           </div>
         </div>
 
         {/* Total Records Analyzed */}
-        <div className="nexora-card p-6 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#82AFA0]">Records Analyzed</span>
-            <div className="p-2.5 rounded-xl bg-[#16362D] text-[#B0E4CC] border border-[#408A71]">
-              <HardDrive className="w-5 h-5" />
-            </div>
+        <div className="p-5 space-y-1">
+          <div className="flex items-center justify-between text-xs font-mono text-[#82AFA0]">
+            <span>OBSERVATIONS PROCESSED</span>
+            <HardDrive className="w-3.5 h-3.5 text-[#B0E4CC]" />
           </div>
-          <div className="mt-4 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-white">
+          <div className="flex items-baseline gap-2 pt-1">
+            <span className="text-2xl sm:text-3xl font-black text-white font-mono">
               {loading ? '...' : formatNumber(stats?.total_records_analyzed ?? 0)}
             </span>
-            <span className="text-xs text-[#82AFA0] font-medium">rows processed</span>
+            <span className="text-[10px] text-[#558776] font-mono">rows</span>
           </div>
         </div>
 
         {/* Patterns Discovered */}
-        <div className="nexora-card p-6 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#82AFA0]">Patterns Discovered</span>
-            <div className="p-2.5 rounded-xl bg-[#16362D] text-[#B0E4CC] border border-[#408A71]">
-              <Layers className="w-5 h-5" />
-            </div>
+        <div className="p-5 space-y-1">
+          <div className="flex items-center justify-between text-xs font-mono text-[#82AFA0]">
+            <span>COHORTS IDENTIFIED</span>
+            <Layers className="w-3.5 h-3.5 text-[#B0E4CC]" />
           </div>
-          <div className="mt-4 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-white">
+          <div className="flex items-baseline gap-2 pt-1">
+            <span className="text-2xl sm:text-3xl font-black text-white font-mono">
               {loading ? '...' : formatNumber(stats?.total_patterns_discovered ?? 0)}
             </span>
-            <span className="text-xs text-[#82AFA0] font-medium">verified patterns</span>
+            <span className="text-[10px] text-[#558776] font-mono">clusters</span>
           </div>
         </div>
 
         {/* Anomalies Detected */}
-        <div className="nexora-card p-6 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#82AFA0]">Anomalies Detected</span>
-            <div className="p-2.5 rounded-xl bg-[#3B1922] text-[#FF859F] border border-[#9E354F]">
-              <AlertTriangle className="w-5 h-5" />
-            </div>
+        <div className="p-5 space-y-1">
+          <div className="flex items-center justify-between text-xs font-mono text-[#FFA3B4]">
+            <span>ANOMALIES FLAGGED</span>
+            <AlertTriangle className="w-3.5 h-3.5 text-[#FFA3B4]" />
           </div>
-          <div className="mt-4 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-[#FF859F]">
+          <div className="flex items-baseline gap-2 pt-1">
+            <span className="text-2xl sm:text-3xl font-black text-[#FFA3B4] font-mono">
               {loading ? '...' : formatNumber(stats?.total_anomalies_detected ?? 0)}
             </span>
-            <span className="text-xs text-[#82AFA0] font-medium">outliers flagged</span>
+            <span className="text-[10px] text-[#FFA3B4]/60 font-mono">outliers</span>
           </div>
         </div>
 

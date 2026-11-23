@@ -9,6 +9,10 @@
 
 body {
   background-color: #091413;
+  background-image: 
+    radial-gradient(rgba(176, 228, 204, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(40, 90, 72, 0.07) 0%, transparent 500px);
+  background-size: 24px 24px, 100% 100%;
   color: #E0F4EC;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
@@ -16,38 +20,38 @@ body {
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
   background: #091413;
 }
 ::-webkit-scrollbar-thumb {
-  background: #285A48;
+  background: #1C3D32;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #408A71;
+  background: #285A48;
 }
 
 /* Custom Card & Panel Classes for Obsidian-Pine-Jade-Mint Palette */
 .nexora-card, .glass-card {
-  background: #0E1F1B;
-  border: 1.5px solid #234C40;
-  border-radius: 1rem;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.55);
-  transition: all 0.2s ease-in-out;
+  background: #0B1916;
+  border: 1px solid rgba(176, 228, 204, 0.12);
+  border-radius: 0.875rem;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .nexora-card:hover, .glass-card:hover {
-  border-color: #408A71;
-  box-shadow: 0 6px 24px -2px rgba(64, 138, 113, 0.25);
+  border-color: rgba(176, 228, 204, 0.28);
+  box-shadow: 0 6px 24px -2px rgba(0, 0, 0, 0.6);
 }
 
 .nexora-panel, .glass-panel {
-  background: #112621;
-  border: 1.5px solid #285A48;
-  border-radius: 1.25rem;
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.65);
+  background: #0D1E1A;
+  border: 1px solid rgba(176, 228, 204, 0.16);
+  border-radius: 1rem;
+  box-shadow: 0 6px 28px -4px rgba(0, 0, 0, 0.55);
 }
 
 .nexora-mint-card {
