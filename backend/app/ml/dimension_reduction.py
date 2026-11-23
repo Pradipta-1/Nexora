@@ -56,7 +56,12 @@ class DimensionReduction:
             if is_anomaly:
                 anom_idx = [i for i, a in enumerate(is_anomaly) if a]
                 inlier_idx = [i for i, a in enumerate(is_anomaly) if not a]
-                sample_inliers = list(np.random.choice(inlier_idx, max(0, 1000 - len(anom_idx)), replace=False))
+                n_to_sample = min(len(inlier_idx), max(0, 1000 - len(anom_idx)))
+                sample_inliers = (
+                    list(np.random.choice(inlier_idx, n_to_sample, replace=False))
+                    if n_to_sample > 0
+                    else []
+                )
                 indices = sorted(anom_idx + sample_inliers)
             else:
                 indices = sorted(list(np.random.choice(n_samples, 1000, replace=False)))

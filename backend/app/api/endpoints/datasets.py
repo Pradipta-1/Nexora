@@ -74,7 +74,10 @@ def preview_dataset(dataset_id: str, db: Session = Depends(get_db)):
             if pd.isna(v):
                 row_dict[str(k)] = None
             elif isinstance(v, (np.floating, float)):
-                row_dict[str(k)] = round(float(v), 2)
+                if np.isnan(v) or np.isinf(v):
+                    row_dict[str(k)] = None
+                else:
+                    row_dict[str(k)] = round(float(v), 2)
             else:
                 row_dict[str(k)] = v
         rows.append(row_dict)

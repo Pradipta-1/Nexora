@@ -136,15 +136,24 @@ class DatasetService:
             if is_numeric:
                 clean_num = coerced.dropna()
                 if len(clean_num) > 0:
+                    raw_mean = float(clean_num.mean())
+                    raw_std = float(clean_num.std()) if len(clean_num) > 1 else 0.0
+                    raw_min = float(clean_num.min())
+                    raw_p25 = float(clean_num.quantile(0.25))
+                    raw_median = float(clean_num.median())
+                    raw_p75 = float(clean_num.quantile(0.75))
+                    raw_max = float(clean_num.max())
+                    raw_skew = float(clean_num.skew()) if len(clean_num) > 2 else 0.0
+
                     summary_stats[col] = {
-                        "mean": round(float(clean_num.mean()), 2),
-                        "std": round(float(clean_num.std()), 2) if clean_num.std() > 0 else 0.0,
-                        "min": round(float(clean_num.min()), 2),
-                        "p25": round(float(clean_num.quantile(0.25)), 2),
-                        "median": round(float(clean_num.median()), 2),
-                        "p75": round(float(clean_num.quantile(0.75)), 2),
-                        "max": round(float(clean_num.max()), 2),
-                        "skewness": round(float(clean_num.skew()), 2) if len(clean_num) > 2 else 0.0
+                        "mean": round(raw_mean, 2) if not (pd.isna(raw_mean) or np.isinf(raw_mean)) else 0.0,
+                        "std": round(raw_std, 2) if not (pd.isna(raw_std) or np.isinf(raw_std) or raw_std <= 0) else 0.0,
+                        "min": round(raw_min, 2) if not (pd.isna(raw_min) or np.isinf(raw_min)) else 0.0,
+                        "p25": round(raw_p25, 2) if not (pd.isna(raw_p25) or np.isinf(raw_p25)) else 0.0,
+                        "median": round(raw_median, 2) if not (pd.isna(raw_median) or np.isinf(raw_median)) else 0.0,
+                        "p75": round(raw_p75, 2) if not (pd.isna(raw_p75) or np.isinf(raw_p75)) else 0.0,
+                        "max": round(raw_max, 2) if not (pd.isna(raw_max) or np.isinf(raw_max)) else 0.0,
+                        "skewness": round(raw_skew, 2) if not (pd.isna(raw_skew) or np.isinf(raw_skew)) else 0.0
                     }
             elif unique_cnt <= 15:
                 # Low-cardinality categorical

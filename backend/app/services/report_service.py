@@ -62,7 +62,7 @@ class ReportService:
 
         # Header
         story.append(Paragraph("NEXORA Analysis Report", title_style))
-        story.append(Paragraph(f"Discover Beyond the Obvious — Generated on {analysis.created_at.strftime('%Y-%m-%d %H:%M UTC')}", subtitle_style))
+        story.append(Paragraph(f"Statistical Discovery Engine — Generated on {analysis.created_at.strftime('%Y-%m-%d %H:%M UTC')}", subtitle_style))
         story.append(Spacer(1, 10))
 
         # Executive Overview

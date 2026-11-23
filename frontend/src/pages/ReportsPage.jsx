@@ -54,6 +54,14 @@ export default function ReportsPage({ selectedAnalysisId, setSelectedAnalysisId,
     }
   }, [selectedAnalysisId]);
 
+  // Reset comparison if it matches active analysis
+  useEffect(() => {
+    if (compareAnalysisId && compareAnalysisId === activeAnalysisId) {
+      setCompareAnalysisId('');
+      setCompareAnalysis(null);
+    }
+  }, [activeAnalysisId, compareAnalysisId]);
+
   // Load selected analysis details
   useEffect(() => {
     if (!activeAnalysisId) return;

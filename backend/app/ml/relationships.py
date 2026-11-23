@@ -70,7 +70,7 @@ class StatisticalRelationships:
 
         return {
             "columns": feature_names,
-            "pearson_matrix": pearson_df.round(3).values.tolist(),
-            "spearman_matrix": spearman_df.round(3).values.tolist(),
+            "pearson_matrix": pearson_df.round(3).fillna(0.0).values.tolist(),
+            "spearman_matrix": spearman_df.round(3).fillna(0.0).values.tolist(),
             "strong_relationships": strong_relationships
         }

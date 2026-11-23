@@ -110,8 +110,14 @@ export default function DiscoveryStudioPage({
             numCols = detail.profile.column_metadata.filter(c => c.is_numeric).map(c => c.name);
           }
 
-          if (!activeFeatures || activeFeatures.length === 0) {
+          const validExisting = (activeFeatures || []).filter(f =>
+            detail.profile.column_metadata.some(c => c.name === f && c.is_numeric)
+          );
+
+          if (validExisting.length === 0) {
             setActiveFeatures(numCols);
+          } else if (validExisting.length !== (activeFeatures || []).length) {
+            setActiveFeatures(validExisting);
           }
         }
       } catch (err) {

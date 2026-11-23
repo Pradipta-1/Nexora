@@ -72,15 +72,22 @@ export default function ProfilerPage({
         const prof = await datasetApi.getProfile(selectedDatasetId);
         setProfile(prof);
 
-        // Pre-select all numeric columns if none selected
-        if (!selectedFeatures || selectedFeatures.length === 0) {
-          let numCols = prof.column_metadata
-            .filter(c => c.is_numeric && !c.name.toLowerCase().includes('id'))
-            .map(c => c.name);
-          if (numCols.length === 0) {
-            numCols = prof.column_metadata.filter(c => c.is_numeric).map(c => c.name);
-          }
+        // Validate and synchronize features for the newly selected dataset
+        let numCols = prof.column_metadata
+          .filter(c => c.is_numeric && !c.name.toLowerCase().includes('id'))
+          .map(c => c.name);
+        if (numCols.length === 0) {
+          numCols = prof.column_metadata.filter(c => c.is_numeric).map(c => c.name);
+        }
+
+        const validExisting = (selectedFeatures || []).filter(f => 
+          prof.column_metadata.some(c => c.name === f && c.is_numeric)
+        );
+
+        if (validExisting.length === 0) {
           if (setSelectedFeatures) setSelectedFeatures(numCols);
+        } else if (validExisting.length !== (selectedFeatures || []).length) {
+          if (setSelectedFeatures) setSelectedFeatures(validExisting);
         }
       } catch (err) {
         setError(err.message || 'Failed to generate profile for this dataset.');

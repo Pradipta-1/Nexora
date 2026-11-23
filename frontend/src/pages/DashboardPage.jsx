@@ -198,7 +198,7 @@ export default function DashboardPage({ setActiveTab, setSelectedDatasetId, setS
               <span>Loading dataset history...</span>
             </div>
           ) : stats?.recent_datasets?.length === 0 ? (
-            <div className="nexora-card p-12 text-center border-2 border-dashed border-[#285A48] space-y-4">
+            <div className="nexora-card p-12 text-center border border-[#285A48] space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-[#16362D] text-[#B0E4CC] flex items-center justify-center mx-auto border border-[#408A71]">
                 <UploadCloud className="w-6 h-6" />
               </div>
