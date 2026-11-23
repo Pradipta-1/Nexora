@@ -44,8 +44,26 @@ export default function DiscoveryStudioPage({
 
   // Execution State
   const [running, setRunning] = useState(false);
+  const [loadingSample, setLoadingSample] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [error, setError] = useState(null);
+
+  const handleLoadSample = async (sampleName = 'customer_segments') => {
+    setLoadingSample(true);
+    setError(null);
+    try {
+      const dataset = await datasetApi.loadSample(sampleName);
+      setDatasets([dataset]);
+      setActiveDatasetId(dataset.id);
+      if (setSelectedDatasetId) {
+        setSelectedDatasetId(dataset.id);
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to load demo dataset.');
+    } finally {
+      setLoadingSample(false);
+    }
+  };
 
   // Visual filter for PCA plot (all, or specific cluster)
   const [clusterFilter, setClusterFilter] = useState('all');
@@ -137,7 +155,7 @@ export default function DiscoveryStudioPage({
           setAnalysisResult(res);
           setActiveDatasetId(res.dataset_id);
         } catch (err) {
-          setError('Failed to load analysis result.');
+          if (setSelectedAnalysisId) setSelectedAnalysisId(null);
         } finally {
           setRunning(false);
         }
@@ -147,13 +165,13 @@ export default function DiscoveryStudioPage({
   }, [selectedAnalysisId]);
 
   const handleRunAnalysis = async () => {
-    if (!activeDatasetId) {
-      setError('Please select a dataset to analyze.');
+    if (!activeDatasetId || datasets.length === 0) {
+      setError('No dataset uploaded yet. Please upload a dataset or load our demo dataset first to run pattern discovery.');
       return;
     }
 
     if (activeFeatures.length === 0) {
-      setError('Please select at least one numeric feature to analyze.');
+      setError('Please select at least one numerical feature to run pattern discovery.');
       return;
     }
 
@@ -199,28 +217,28 @@ export default function DiscoveryStudioPage({
   });
 
   const renderAlgorithmSetup = (isCentered = false) => (
-    <div className={`nexora-card ${isCentered ? 'p-6 sm:p-8 space-y-6 shadow-xl max-w-2xl mx-auto border-2 border-[#285A48]' : 'p-5 space-y-5 shadow-sm'}`}>
-      <div className="flex items-center justify-between border-b border-[#285A48]/50 pb-3">
-        <h3 className={`${isCentered ? 'text-base sm:text-lg' : 'text-sm'} font-black text-white uppercase tracking-wider flex items-center gap-2`}>
-          <Sliders className={`${isCentered ? 'w-5 h-5' : 'w-4 h-4'} text-[#B0E4CC]`} />
+    <div className={`nexora-card ${isCentered ? 'p-4 sm:p-5 space-y-4 shadow-xl max-w-xl mx-auto border-2 border-[#285A48]' : 'p-4 space-y-3.5 shadow-sm'}`}>
+      <div className="flex items-center justify-between border-b border-[#285A48]/50 pb-2.5">
+        <h3 className={`${isCentered ? 'text-sm sm:text-base' : 'text-xs sm:text-sm'} font-black text-white uppercase tracking-wider flex items-center gap-2`}>
+          <Sliders className={`${isCentered ? 'w-4 h-4' : 'w-3.5 h-3.5'} text-[#B0E4CC]`} />
           <span>Algorithm Setup</span>
         </h3>
         {isCentered && (
-          <span className="text-xs text-[#82B3A1] font-semibold">
+          <span className="text-[11px] text-[#82B3A1] font-semibold">
             Configure parameters & run
           </span>
         )}
       </div>
 
       {/* Mode & Scaling */}
-      <div className={isCentered ? "grid grid-cols-1 sm:grid-cols-2 gap-4" : "space-y-4"}>
+      <div className={isCentered ? "grid grid-cols-1 sm:grid-cols-2 gap-3" : "space-y-3"}>
         {/* Algorithm Choice */}
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <label className="text-xs font-bold text-[#E0F4EC]">Mode</label>
           <select
             value={algorithmType}
             onChange={(e) => setAlgorithmType(e.target.value)}
-            className="w-full bg-[#0B1916] border-2 border-[#285A48] text-white text-xs rounded-xl p-2.5 focus:outline-none focus:border-[#B0E4CC] font-semibold cursor-pointer"
+            className="w-full bg-[#0B1916] border-2 border-[#285A48] text-white text-xs rounded-xl p-2 focus:outline-none focus:border-[#B0E4CC] font-semibold cursor-pointer"
           >
             <option value="full_discovery">Full Pattern Discovery (All Engines)</option>
             <option value="kmeans">K-Means Clustering</option>
@@ -230,12 +248,12 @@ export default function DiscoveryStudioPage({
         </div>
 
         {/* Scaling Method */}
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <label className="text-xs font-bold text-[#E0F4EC]">Scaling Technique</label>
           <select
             value={scalingMethod}
             onChange={(e) => setScalingMethod(e.target.value)}
-            className="w-full bg-[#0B1916] border-2 border-[#285A48] text-white text-xs rounded-xl p-2.5 focus:outline-none focus:border-[#B0E4CC] font-semibold cursor-pointer"
+            className="w-full bg-[#0B1916] border-2 border-[#285A48] text-white text-xs rounded-xl p-2 focus:outline-none focus:border-[#B0E4CC] font-semibold cursor-pointer"
           >
             <option value="standard">StandardScaler (Zero Mean, Unit Variance)</option>
             <option value="robust">RobustScaler (Median / IQR Outlier-Resistant)</option>
@@ -244,10 +262,10 @@ export default function DiscoveryStudioPage({
       </div>
 
       {/* Sliders Area */}
-      <div className="space-y-3 pt-2 border-t border-[#1D3B32]">
+      <div className="space-y-2.5 pt-1.5 border-t border-[#1D3B32]">
         {/* K-Means Clusters Slider */}
         {(algorithmType === 'full_discovery' || algorithmType === 'kmeans') && (
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex justify-between text-xs">
               <span className="text-[#E0F4EC] font-bold">Clusters (k):</span>
               <span className="text-[#B0E4CC] font-black">{kClusters}</span>
@@ -265,8 +283,8 @@ export default function DiscoveryStudioPage({
 
         {/* DBSCAN Parameters */}
         {(algorithmType === 'full_discovery' || algorithmType === 'dbscan') && (
-          <div className={isCentered ? "grid grid-cols-1 sm:grid-cols-2 gap-4" : "space-y-3"}>
-            <div className="space-y-1">
+          <div className={isCentered ? "grid grid-cols-1 sm:grid-cols-2 gap-3" : "space-y-2.5"}>
+            <div className="space-y-0.5">
               <div className="flex justify-between text-xs">
                 <span className="text-[#E0F4EC] font-semibold">DBSCAN Epsilon (ε):</span>
                 <span className="text-[#B0E4CC] font-mono font-bold">{dbscanEps}</span>
@@ -281,7 +299,7 @@ export default function DiscoveryStudioPage({
                 className="w-full accent-[#B0E4CC] bg-[#142D26]"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               <div className="flex justify-between text-xs">
                 <span className="text-[#E0F4EC] font-semibold">Min Samples:</span>
                 <span className="text-[#B0E4CC] font-mono font-bold">{dbscanMinSamples}</span>
@@ -300,7 +318,7 @@ export default function DiscoveryStudioPage({
 
         {/* Isolation Forest Contamination */}
         {(algorithmType === 'full_discovery' || algorithmType === 'isolation_forest') && (
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex justify-between text-xs">
               <span className="text-[#E0F4EC] font-bold">Anomaly Contamination:</span>
               <span className="text-[#FF859F] font-black">{(contamination * 100).toFixed(0)}%</span>
@@ -319,7 +337,7 @@ export default function DiscoveryStudioPage({
       </div>
 
       {/* Feature Selection Checklist */}
-      <div className="space-y-2 pt-2 border-t border-[#1D3B32]">
+      <div className="space-y-1.5 pt-1.5 border-t border-[#1D3B32]">
         <div className="flex justify-between items-center">
           <label className="text-xs font-bold text-[#E0F4EC]">Active Numerical Features</label>
           {isCentered && (
@@ -328,28 +346,65 @@ export default function DiscoveryStudioPage({
             </span>
           )}
         </div>
-        <div className={`space-y-1.5 overflow-y-auto pr-1 ${isCentered ? 'max-h-56 grid grid-cols-1 sm:grid-cols-2 gap-2 space-y-0' : 'max-h-40'}`}>
-          {datasetDetail?.profile?.column_metadata
-            ?.filter(c => c.is_numeric)
-            .map((c) => (
-              <label key={c.name} className={`flex items-center gap-2 text-xs text-[#9EC4B5] cursor-pointer hover:text-white font-medium ${isCentered ? 'p-2 rounded-lg bg-[#0B1A16] border border-[#1D3B32] hover:border-[#285A48]' : ''}`}>
-                <input
-                  type="checkbox"
-                  checked={activeFeatures.includes(c.name)}
-                  onChange={() => toggleFeature(c.name)}
-                  className="rounded border-[#285A48] text-[#B0E4CC] focus:ring-0"
-                />
-                <span className="truncate">{c.name}</span>
-              </label>
-            ))}
+        <div className={`space-y-1 overflow-y-auto pr-1 ${isCentered ? 'max-h-40' : 'max-h-36'}`}>
+          {(!activeDatasetId || datasets.length === 0) ? (
+            <p className="text-xs text-[#82AFA0] py-1.5 text-center italic">
+              0 numerical features available (no dataset selected)
+            </p>
+          ) : (
+            <div className={isCentered ? "grid grid-cols-1 sm:grid-cols-2 gap-2" : "space-y-1.5"}>
+              {datasetDetail?.profile?.column_metadata
+                ?.filter(c => c.is_numeric)
+                .map((c) => (
+                  <label key={c.name} className={`flex items-center gap-2 text-xs text-[#9EC4B5] cursor-pointer hover:text-white font-medium ${isCentered ? 'p-1.5 rounded-lg bg-[#0B1A16] border border-[#1D3B32] hover:border-[#285A48]' : ''}`}>
+                    <input
+                      type="checkbox"
+                      checked={activeFeatures.includes(c.name)}
+                      onChange={() => toggleFeature(c.name)}
+                      className="rounded border-[#285A48] text-[#B0E4CC] focus:ring-0"
+                    />
+                    <span className="truncate">{c.name}</span>
+                  </label>
+                ))}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Warning Notification if Error */}
+      {error && (
+        <div className="p-3 rounded-xl bg-[#3B1922] border-2 border-[#9E354F] text-[#FF859F] text-xs font-bold flex items-start gap-2 shadow-sm animate-fade-in">
+          <AlertTriangle className="w-4 h-4 text-[#FF859F] flex-shrink-0 mt-0.5" />
+          <div className="flex-1 space-y-1.5">
+            <div>{error}</div>
+            {(!activeDatasetId || datasets.length === 0) && (
+              <div className="flex items-center gap-2 pt-0.5">
+                <button
+                  type="button"
+                  onClick={() => handleLoadSample('customer_segments')}
+                  disabled={loadingSample}
+                  className="px-2.5 py-1 rounded-lg bg-[#16382F] hover:bg-[#285A48] text-[#B0E4CC] text-[11px] font-bold border border-[#408A71] cursor-pointer transition-colors"
+                >
+                  {loadingSample ? 'Loading Demo...' : 'Load Demo Dataset Now'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('upload')}
+                  className="px-2.5 py-1 rounded-lg bg-[#0E1F1B] hover:bg-[#1A382F] text-[#82AFA0] hover:text-white text-[11px] font-bold border border-[#285A48] cursor-pointer transition-colors"
+                >
+                  Upload Dataset
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Execute Button */}
       <button
         onClick={handleRunAnalysis}
-        disabled={running || activeFeatures.length === 0}
-        className={`btn-primary w-full shadow-md text-xs sm:text-sm font-bold cursor-pointer select-none ${isCentered ? 'py-3.5 mt-2' : 'py-3'}`}
+        disabled={running}
+        className={`btn-primary w-full shadow-md text-xs sm:text-sm font-bold cursor-pointer select-none ${isCentered ? 'py-2.5 mt-1' : 'py-2.5'}`}
       >
         {running ? (
           <>
@@ -367,18 +422,18 @@ export default function DiscoveryStudioPage({
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 space-y-5">
       
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b-2 border-[#285A48]/50">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b-2 border-[#285A48]/50">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+          <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
             <span>ML Discovery Studio</span>
-            <span className="text-xs px-3 py-1 rounded-full bg-[#16382F] text-[#B0E4CC] border border-[#408A71] font-bold">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#16382F] text-[#B0E4CC] border border-[#408A71] font-bold">
               Unsupervised Learning
             </span>
           </h1>
-          <p className="text-xs text-[#9EC4B5] font-medium mt-1">
+          <p className="text-xs text-[#9EC4B5] font-medium mt-0.5">
             Run Scikit-learn K-Means, DBSCAN, Isolation Forest, and PCA dimension reduction with instant visual feedback.
           </p>
         </div>
@@ -394,24 +449,22 @@ export default function DiscoveryStudioPage({
             }}
             className="bg-[#0B1916] border-2 border-[#285A48] text-white text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-[#B0E4CC] font-bold shadow-sm"
           >
-            {datasets.map((ds) => (
-              <option key={ds.id} value={ds.id} className="bg-[#0B1916] text-white">
-                {ds.original_filename}
-              </option>
-            ))}
+            {datasets.length === 0 ? (
+              <option value="">No Datasets Uploaded</option>
+            ) : (
+              datasets.map((ds) => (
+                <option key={ds.id} value={ds.id} className="bg-[#0B1916] text-white">
+                  {ds.original_filename}
+                </option>
+              ))
+            )}
           </select>
         </div>
       </div>
 
-      {error && (
-        <div className="p-4 rounded-xl bg-[#3B1922] border-2 border-[#9E354F] text-[#FF859F] text-xs font-bold shadow-sm">
-          {error}
-        </div>
-      )}
-
       {/* If Run has not been clicked yet, display the Algorithm Setup menu in the middle */}
       {!analysisResult && !running ? (
-        <div className="py-4 max-w-2xl mx-auto">
+        <div className="py-2 max-w-xl mx-auto">
           {renderAlgorithmSetup(true)}
         </div>
       ) : (
