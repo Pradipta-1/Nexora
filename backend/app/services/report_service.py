@@ -46,7 +46,7 @@ class ReportService:
             parent=styles['Heading2'],
             fontSize=14,
             leading=18,
-            textColor=colors.HexColor("#7C3AED"),
+            textColor=colors.HexColor("#285A48"),
             spaceBefore=12,
             spaceAfter=8
         )

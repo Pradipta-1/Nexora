@@ -77,6 +77,21 @@ export default function DiscoveryStudioPage({
     fetchDatasets();
   }, []);
 
+  // Synchronize when selectedDatasetId prop changes externally
+  useEffect(() => {
+    if (selectedDatasetId && selectedDatasetId !== activeDatasetId) {
+      setActiveDatasetId(selectedDatasetId);
+      setAnalysisResult(null);
+    }
+  }, [selectedDatasetId]);
+
+  // Synchronize when selectedFeatures prop changes externally
+  useEffect(() => {
+    if (selectedFeatures && selectedFeatures.length > 0) {
+      setActiveFeatures(selectedFeatures);
+    }
+  }, [selectedFeatures]);
+
   // Fetch dataset info & active features
   useEffect(() => {
     if (!activeDatasetId) return;
@@ -86,9 +101,14 @@ export default function DiscoveryStudioPage({
         setDatasetDetail(detail);
 
         if (detail?.profile?.column_metadata) {
-          const numCols = detail.profile.column_metadata
+          let numCols = detail.profile.column_metadata
             .filter(c => c.is_numeric && !c.name.toLowerCase().includes('id'))
             .map(c => c.name);
+
+          // Fallback if all numeric columns contain 'id'
+          if (numCols.length === 0) {
+            numCols = detail.profile.column_metadata.filter(c => c.is_numeric).map(c => c.name);
+          }
 
           if (!activeFeatures || activeFeatures.length === 0) {
             setActiveFeatures(numCols);

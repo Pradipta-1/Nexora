@@ -33,11 +33,13 @@ export const analysisApi = {
 
   // PDF report download URL
   getPdfReportUrl: (analysisId) => {
-    return `${api.defaults.baseURL}/reports/${analysisId}/pdf`;
+    const base = (api.defaults.baseURL || 'http://localhost:8000/api').replace(/\/+$/, '');
+    return `${base}/reports/${analysisId}/pdf`;
   },
 
   // CSV anomaly export URL
   getCsvExportUrl: (analysisId) => {
-    return `${api.defaults.baseURL}/reports/${analysisId}/csv`;
+    const base = (api.defaults.baseURL || 'http://localhost:8000/api').replace(/\/+$/, '');
+    return `${base}/reports/${analysisId}/csv`;
   },
 };

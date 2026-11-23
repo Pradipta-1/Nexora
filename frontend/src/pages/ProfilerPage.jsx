@@ -74,10 +74,13 @@ export default function ProfilerPage({
 
         // Pre-select all numeric columns if none selected
         if (!selectedFeatures || selectedFeatures.length === 0) {
-          const numCols = prof.column_metadata
+          let numCols = prof.column_metadata
             .filter(c => c.is_numeric && !c.name.toLowerCase().includes('id'))
             .map(c => c.name);
-          setSelectedFeatures(numCols);
+          if (numCols.length === 0) {
+            numCols = prof.column_metadata.filter(c => c.is_numeric).map(c => c.name);
+          }
+          if (setSelectedFeatures) setSelectedFeatures(numCols);
         }
       } catch (err) {
         setError(err.message || 'Failed to generate profile for this dataset.');

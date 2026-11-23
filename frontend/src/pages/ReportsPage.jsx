@@ -47,6 +47,13 @@ export default function ReportsPage({ selectedAnalysisId, setSelectedAnalysisId,
     fetchAnalyses();
   }, [selectedAnalysisId]);
 
+  // Synchronize when selectedAnalysisId prop changes externally
+  useEffect(() => {
+    if (selectedAnalysisId && selectedAnalysisId !== activeAnalysisId) {
+      setActiveAnalysisId(selectedAnalysisId);
+    }
+  }, [selectedAnalysisId]);
+
   // Load selected analysis details
   useEffect(() => {
     if (!activeAnalysisId) return;
